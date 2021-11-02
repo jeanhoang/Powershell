@@ -29,7 +29,6 @@ $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 #User Accounts Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
-
 #Expired accounts: Specific
 $ExpiredUsers = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#> | Select-Object Name, SamAccountName, DistinguishedName, AccountExpirationDate
 #Expired accounts: For HarryRosen OU
@@ -61,7 +60,7 @@ $SUSUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchB
 
 
 #Export to CSV 
-$UserS | Export-Csv <#Enter where you want to store your file#>
+$Users | Export-Csv <#Enter where you want to store your file#>
 
 # Output
 Write-Output <#Enter your look up#>
