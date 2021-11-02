@@ -33,7 +33,9 @@ $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
 
-#Expire Users
+#Accounts that are expired but are not disabled
+$User = Get-ADUser -Filter * -SearchBase <#Enter path#> -properties AccountExpirationDate | Where-Object{$_.AccountExpirationDate -lt (Get-Date) -and $_.AccountExpirationDate -ne $null -and $_.Enabled -eq $True} | select-object Name, SamAccountName, AccountExpirationDate
+Write-Output $User
 
 #Check for accounts that has password that's set to never expire
 $SUSUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enabled
