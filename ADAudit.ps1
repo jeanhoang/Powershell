@@ -30,6 +30,9 @@ $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
 
+#Expired accounts
+$ExpiredUsers = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#> | Select-Object Name, SamAccountName, DistinguishedName, AccountExpirationDate
+
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
 
