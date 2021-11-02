@@ -26,7 +26,7 @@ $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 # ***********************************************#
 
 
-#Lookups
+#User Accounts Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
 
@@ -44,6 +44,17 @@ Write-Output $User
 
 #Check for accounts that has password that's set to never expire
 $SUSUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enabled
+
+
+# ***********************************************#
+
+
+
+
+#Computer Account Lookups
+# Replace the path to look up inactive users from a specific OU 
+# ***********************************************#
+
 
 
 # ***********************************************#
