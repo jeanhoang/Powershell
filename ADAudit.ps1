@@ -1,7 +1,7 @@
 ﻿
 < #Audit AD based on specific OU, not from entire user lists #> 
 
-#Generic
+#Generic#
 # ***********************************************#
 $GenericHR = 'OU=HarryRosen,DC=hri,DC=com'
 $GenericHRComp = 'OU=HRStorePCs,DC=hri,DC=com'
@@ -59,6 +59,10 @@ $PWUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBa
 #Find Disabled Comp Accounts
 $ComputerAcc = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase <#Enter path#> | Select-Object Name, SamAccountName
 #$(Get-ADComputer 'computername').distinguishedName: exact path for comp 
+
+#Generic computer# 
+
+$GenericComputers = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase 'CN=Computers,DC=hri,DC=com' | Select-Object Name, SamAccountName
 
 # ***********************************************#
 
