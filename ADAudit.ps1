@@ -5,6 +5,7 @@
 # ***********************************************#
 $GenericHR = 'OU=HarryRosen,DC=hri,DC=com'
 $GenericHRComp = 'OU=HRStorePCs,DC=hri,DC=com'
+$GenericComputers = 'CN=Computers,DC=hri,DC=com'
 
 # ***********************************************#
 #Paths
