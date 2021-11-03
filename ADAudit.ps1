@@ -21,40 +21,34 @@ $MIPath = 'OU=mi,DC=hri,DC=com'
 $COCompPath = 'OU=HR Coffice,OU=Harry Rosen Computers,DC=hri,DC=com'
 #HR Stores
 $StoreCompPath = 'OU=HR Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
-#Zegna Store
-$ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
+
 # ***********************************************#
 
 
-#User Accounts Lookups
+#Users Account Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
-#Expired accounts: Specific
-$ExpiredUsers = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#> | Select-Object Name, SamAccountName, DistinguishedName, AccountExpirationDate
-#Expired accounts: For HarryRosen OU
-$User = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase 'OU=HarryRosen,DC=hri,DC=com' | Select-Object Name, AccountExpirationDate, LastLogonDate
 
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
 
-#Accounts that are expired but are not disabled
-$User = Get-ADUser -Filter * -SearchBase <#Enter path#> -properties AccountExpirationDate | Where-Object{$_.AccountExpirationDate -lt (Get-Date) -and $_.AccountExpirationDate -ne $null -and $_.Enabled -eq $True} | select-object Name, SamAccountName, AccountExpirationDate
-Write-Output $User
+#Expired Users
+$ExpiredAccount = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#>| Select-Object Name, SamAccountName, DistinguishedName, Account Expiration Date
+
 
 #Check for accounts that has password that's set to never expire
-$SUSUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enabled
-
+$PWUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enable
 
 # ***********************************************#
-
-
 
 
 #Computer Account Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
+
 #Find Disabled Comp Accounts
 $ComputerAcc = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase <#Enter path#> | Select-Object Name, SamAccountName
+#$(Get-ADComputer 'computername').distinguishedName: exact path for comp 
 
 
 # ***********************************************#
@@ -64,7 +58,7 @@ $ComputerAcc = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 200
 $Users | Export-Csv <#Enter where you want to store your file#>
 
 # Output
-Write-Output <#Enter your look up#>
+Write-Output $Users
 
 
 
