@@ -53,7 +53,8 @@ $SUSUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchB
 #Computer Account Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
-
+#Find Disabled Comp Accounts
+$ComputerAcc = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase <#Enter path#> | Select-Object Name, SamAccountName
 
 
 # ***********************************************#
