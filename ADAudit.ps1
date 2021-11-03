@@ -30,49 +30,47 @@ $COCompPath = 'OU=HR Coffice,OU=Harry Rosen Computers,DC=hri,DC=com'
 $StoreCompPath = 'OU=HR Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 #Zegna Store
 $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
-
 # ***********************************************#
 
 
 #Users Account Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
-
 #Disabled User accounts (generic)
 $DisabledUsers = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=HarryRosen,DC=hri,DC=com' -Properties Name, OperatingSystem
-
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
-
 #Expired Users
 $ExpiredAccount = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#>| Select-Object Name, SamAccountName, DistinguishedName, Account Expiration Date
-
 #Check for accounts that has password that's set to never expire
 $PWUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enable
-
 # ***********************************************#
 
 
 #Computer Account Lookups
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
-
 #Find Disabled Comp Accounts
 $ComputerAcc = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase <#Enter path#> | Select-Object Name, SamAccountName
-#$(Get-ADComputer 'computername').distinguishedName: exact path for comp 
-
 #Generic computer# 
-
 $GenericComputers = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase 'CN=Computers,DC=hri,DC=com' | Select-Object Name, SamAccountName
-
 # ***********************************************#
 
 #Print Disabled MI Accs
 # ***********************************************#
-
 $DisabledMI = Get-ADUser -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -Properties Name, OperatingSystem -SearchBase $MIPath| Select-Object Name, SamAccountName
+# ***********************************************#
+
+
+#User-to-be-disabled 
+# ***********************************************#
+#Time span: Within 2 months?
+
 
 # ***********************************************#
+
+#User-Disabled: check if any acc is still enabled
+$StillEnabledUsers = Get-ADComputer -Filter {(Enabled -eq $True)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=Users-Disabled,DC=hri,DC=com' -Properties Name, OperatingSystem
 
 
 
