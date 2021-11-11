@@ -41,7 +41,7 @@ $DisabledUsers = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
 #Expired Users
-$ExpiredAccount = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#>| Select-Object Name, SamAccountName, DistinguishedName, Account Expiration Date
+$ExpiredAccount = Search-ADAccount -AccountExpired -UsersOnly -ResultPageSize 2000 -resultSetSize $null -SearchBase <#Enter path#>| Select-Object Name, SamAccountName, DistinguishedName, AccountExpirationDate
 #Check for accounts that has password that's set to never expire
 $PWUsers = Get-ADUser -filter * -properties Name, PasswordNeverExpires -SearchBase <#Enter path#> | where { $_.passwordNeverExpires -eq $true } | Select-Object DistinguishedName,Name,Enable
 # ***********************************************#
