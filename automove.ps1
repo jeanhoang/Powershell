@@ -6,7 +6,7 @@ $User2BDis = 'OU=Users-To Be Disabled,DC=hri,DC=com'
 $UserDis = 'OU=Users-Disabled,DC=hri,DC=com'
 
 #Define days - within 90 days
-$Date = (Get-Date).AddDays(-90)
+$Date = (Get-Date).AddDays(-30)
 
 #Look up any users within 90 days
 $Users = Get-ADUser -Filter {((Enabled -eq $true) -and (LastLogonDate -lt $date))} -Properties LastLogonDate -SearchBase $User2BDis| select samaccountname, Name, LastLogonDate | Sort-Object LastLogonDate 
@@ -14,10 +14,10 @@ $Users = Get-ADUser -Filter {((Enabled -eq $true) -and (LastLogonDate -lt $date)
 #Export this users to a csv file for manual checking
 <#****************************** Important ************************************************#>
 #You should be checking this csv file before running the disable cmd
-$Users | Export-Csv -Path C:\Temp\users-2be-disabled.csv -NoTypeInformation
+$Users | Export-Csv -Path C:\Temp\60daysbatch.csv -NoTypeInformation
 
 #Import names from the CSV file
-$Import_csv = Import-Csv -Path C:\Temp\users-2be-disabled.csv
+$Import_csv = Import-Csv -Path C:\Temp\60daysbatch.csv
 
  $Import_csv | ForEach-Object {
 
@@ -25,12 +25,14 @@ $Import_csv = Import-Csv -Path C:\Temp\users-2be-disabled.csv
     $DN = (Get-ADUser -Identity $movedUsers).DistinguishedName
 
     #Disable all names from the csv
-    Get-ADUser -Identity $movedUsers| Disable-ADAccount 
+    #Add -WhatIf at the end of the line to double check before disabling
+    Get-ADUser -Identity $movedUsers| Disable-ADAccount -WhatIf
 }
 
 #Look up disabled users from Users-ToBe-Disabled and move them
+#Add -WhatIf at the end of the line to double check before moving
 Get-ADUser -filter {Enabled -eq $false } -SearchBase $User2BDis | Foreach-object {
-  Move-ADObject -Identity $_.DistinguishedName -TargetPath $UserDis
+  Move-ADObject -Identity $_.DistinguishedName -TargetPath $UserDis -WhatIf
 }
 
 Write-Host "Completed disabling and moving"
