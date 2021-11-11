@@ -37,7 +37,7 @@ $ZegnaPath = 'OU=Zegna Stores,OU=Harry Rosen Computers,DC=hri,DC=com'
 # Replace the path to look up inactive users from a specific OU 
 # ***********************************************#
 #Disabled User accounts (generic)
-$DisabledUsers = Get-ADComputer -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=HarryRosen,DC=hri,DC=com' -Properties Name, OperatingSystem
+$DisabledUsers = Get-ADUser -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=HarryRosen,DC=hri,DC=com' -Properties Name, OperatingSystem
 #Inactive Users
 $InactiveUsers = Search-ADAccount -AccountInactive -DateTime $InactiveDate -UsersOnly -SearchBase <#Enter path#> | Select-Object @{ Name="Username"; Expression={$_.SamAccountName} }, Name, LastLogonDate, DistinguishedName
 #Expired Users
@@ -62,15 +62,9 @@ $DisabledMI = Get-ADUser -Filter {(Enabled -eq $False)} -ResultPageSize 2000 -Re
 # ***********************************************#
 
 
-#User-to-be-disabled 
-# ***********************************************#
-#Time span: Within 2 months?
-
-
-# ***********************************************#
 
 #User-Disabled: check if any acc is still enabled
-$StillEnabledUsers = Get-ADComputer -Filter {(Enabled -eq $True)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=Users-Disabled,DC=hri,DC=com' -Properties Name, OperatingSystem
+$StillEnabledUsers = Get-ADUser -Filter {(Enabled -eq $True)} -ResultPageSize 2000 -ResultSetSize $null -SearchBase 'OU=Users-Disabled,DC=hri,DC=com' -Properties Name, OperatingSystem
 
 
 
