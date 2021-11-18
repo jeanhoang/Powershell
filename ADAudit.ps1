@@ -22,7 +22,7 @@ $UsersPath = 'OU=Users,OU=HarryRosen,DC=hri,DC=com'
 #mi 
 $MIPath = 'OU=mi,DC=hri,DC=com'
 # ***********************************************#
-
+ 
 # *******Computer Paths*******#
 #CO Computers
 $COCompPath = 'OU=HR Coffice,OU=Harry Rosen Computers,DC=hri,DC=com'
