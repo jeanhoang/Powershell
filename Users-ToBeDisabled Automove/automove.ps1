@@ -6,14 +6,14 @@ $User2BDis = 'OU=Users-To Be Disabled,DC=hri,DC=com'
 $UserDis = 'OU=Users-Disabled,DC=hri,DC=com'
 
 #Define days - within 90 days
-$Date = (Get-Date).AddDays(-30)
+$Date = (Get-Date).AddDays(-60)
 
 #Look up any users within 90 days
 $Users = Get-ADUser -Filter {((Enabled -eq $true) -and (LastLogonDate -lt $date))} -Properties LastLogonDate -SearchBase $User2BDis| select samaccountname, Name, LastLogonDate | Sort-Object LastLogonDate 
 
 #Export this users to a csv file for manual checking
 <#****************************** Important ************************************************#>
-#You should be checking this csv file before running the disable cmd
+#You should be checking this csv file before running the disable cmd  
 $Users | Export-Csv -Path C:\Temp\60daysbatch.csv -NoTypeInformation
 
 #Import names from the CSV file
